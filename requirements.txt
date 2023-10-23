@@ -1,0 +1,16 @@
+altgraph==0.17.4
+certifi==2023.7.22
+charset-normalizer==3.3.0
+colorama==0.4.6
+dnspython==2.4.2
+email-validator==2.0.0.post2
+idna==3.4
+packaging==23.2
+pefile==2023.2.7
+pyinstaller==6.1.0
+pyinstaller-hooks-contrib==2023.10
+pywin32-ctypes==0.2.2
+requests==2.31.0
+setuptools==68.2.2
+urllib3==2.0.6
+validate-email==1.3
