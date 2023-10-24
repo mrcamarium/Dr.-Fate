@@ -1,4 +1,4 @@
-# Dr.-Fate 0.1.3
+# Dr.-Fate 0.4.3
 Sistema pensato per verifica se degli indirizzi email sono veri o falsi
 
 $ apt update && apt upgrade 
