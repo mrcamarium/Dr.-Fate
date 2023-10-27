@@ -1,5 +1,7 @@
-# Dr.-Fate 1.4.4
-Sistema pensato per verifica se degli indirizzi email sono veri o falsi
+# Dr.-Fate 1.7.4
+Sistema pensato per effettuare varie verifiche
+1) Verifica di una email (Se è vera)
+2) Controllo IP
 
 $ apt update && apt upgrade 
   
