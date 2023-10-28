@@ -8,6 +8,8 @@ import smtplib, colorama, time, re, sys, socket
 from email_validator import validate_email
 from colorama import Fore #BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE
 from colorama import Style #DIM, NORMAL, BRIGHT, RESET_ALL
+from faker import Factory
+fake = Factory.create('it_IT')
 # Variabili
 verde = Fore.GREEN
 reset = Style.RESET_ALL
@@ -17,14 +19,14 @@ opaco = Style.DIM
 brillante = Style.BRIGHT
 giallo = Fore.YELLOW
 #Info
-print(blu + brillante + "Version 1.7.4" + reset)
+print(blu + brillante + "Version 1.8.4" + reset)
 print(blu + opaco + "Codice by - Mr. Camarium")
 print(blu + "Youtube - mrcamarium" + reset, '\n')
 hostname = socket.gethostname()
 ipAddress = socket.gethostbyname(hostname)
 print(f"Hostname: {hostname}")
-print('Il mio indirizzo IP è: ', ipAddress,'\n')
-time.sleep(1) #Pausa
+print('Il mio indirizzo IP locale è: ', ipAddress,'\n')
+time.sleep(2) #Pausa
 def verifica_sintassi(email): #Definisco una funzione che controlla la sintassi di un indirizzo email
   regex = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$" #Uso una regex per verificare che l'email abbia il formato corretto
   return bool(re.match(regex, email)) #Restituisco True se l'email è valida, False altrimenti
@@ -48,7 +50,7 @@ def menu(): #Menu
     print(giallo + """
 \t 1. Verifica Indirizzo Email
 \t 2. Verifica Indirizzo IP
-\t 3. Null
+\t 3. Genera una falsa identità
 \t 4. Null
 \t 5. Null
 \t 6. Null
@@ -61,6 +63,8 @@ def control(): #Lista azioni
     elif ctrl == "2" :
         ipinfo() #Controllo indirizzo IP
     elif ctrl == "3" :
+        IDFalso() #Genera una falsa identità
+    elif ctrl == "4" :
         veremail()
     elif ctrl == "7" :
         sys.exit()
@@ -87,6 +91,13 @@ def ipinfo(): #Verifico IP
     url = ("https://ipinfo.io/")
     term = input("Inserisci Indirizzo IP: ")
     webbrowser.open(url+term,new=new)
+def IDFalso(): #Genera una falsa identità
+    print("\n","-----x-----x-----x-----")
+    print(verde + "Email: ",fake.email())
+    print("Nome E Cognome: ",fake.name())
+    print("Indirizzo: ",fake.address())
+    print("Stato: Italia" + reset)
+    print("-----x-----x-----x-----")
 while True: #Ricomincia il programma
  menu()
  control()
