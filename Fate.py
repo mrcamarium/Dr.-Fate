@@ -19,16 +19,17 @@ opaco = Style.DIM
 brillante = Style.BRIGHT
 giallo = Fore.YELLOW
 #Info
-print(blu + brillante + "Version 1.8.4" + reset)
-print(blu + opaco + "Codice by - Mr. Camarium")
-print(blu + "Youtube - mrcamarium" + reset, '\n')
+with open('Info/info.txt', encoding='utf8') as f:
+     print(blu + f.read() + reset,'\n')
+time.sleep(1) #Pausa
+#Analisi dei dati di rete
 hostname = socket.gethostname()
 ipAddress = socket.gethostbyname(hostname)
 print(f"Hostname: {hostname}")
 print('Il mio indirizzo IP locale è: ', ipAddress,'\n')
 time.sleep(2) #Pausa
 def verifica_sintassi(email): #Definisco una funzione che controlla la sintassi di un indirizzo email
-  regex = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$" #Uso una regex per verificare che l'email abbia il formato corretto
+  regex = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+[a-zA-Z0-9-.]+$" #Uso una regex per verificare che l'email abbia il formato corretto
   return bool(re.match(regex, email)) #Restituisco True se l'email è valida, False altrimenti
 def verifica_dominio(email): #Definisco una funzione che controlla l'esistenza del dominio di un indirizzo email
         try:
