@@ -4,7 +4,7 @@ Dal momento che viene spesso usato per scopi di intrusione e spam, molte societ�
 default.
 """
 # Importo le librerie
-import smtplib, colorama, time, re, sys, socket
+import smtplib, colorama, time, re, sys, socket, email
 from email_validator import validate_email
 from colorama import Fore #BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE
 from colorama import Style #DIM, NORMAL, BRIGHT, RESET_ALL
@@ -52,10 +52,8 @@ def menu(): #Menu
 \t 1. Verifica Indirizzo Email
 \t 2. Verifica Indirizzo IP
 \t 3. Genera una falsa identità
-\t 4. Null
-\t 5. Null
-\t 6. Null
-\t 7. Exit
+\t 4. Estrai Dati Email
+\t 5. Exit
 """ + reset)
 def control(): #Lista azioni
     ctrl = input("Effettua La Scelta: ")
@@ -66,8 +64,8 @@ def control(): #Lista azioni
     elif ctrl == "3" :
         IDFalso() #Genera una falsa identità
     elif ctrl == "4" :
-        veremail()
-    elif ctrl == "7" :
+        mailinfo()
+    elif ctrl == "5" :
         sys.exit()
     else :
         print(rosso + "Scelta Errata" + reset)    
@@ -93,12 +91,84 @@ def ipinfo(): #Verifico IP
     term = input("Inserisci Indirizzo IP: ")
     webbrowser.open(url+term,new=new)
 def IDFalso(): #Genera una falsa identità
-    print("\n","-----x-----x-----x-----")
+    print("\n","-----x-----x-----x-----x-----")
     print(verde + "Email: ",fake.email())
     print("Nome E Cognome: ",fake.name())
     print("Indirizzo: ",fake.address())
     print("Stato: Italia" + reset)
-    print("-----x-----x-----x-----")
+    print("-----x-----x-----x-----x-----")
+def mailinfo():
+	eml = input("Inserisci il percorso del file: ")
+	f = open(eml, "r") 
+	msg = email.message_from_file(f)
+	f.close()
+	headers = email.message_from_string(msg.as_string())
+	infomail={
+		"message-id":"",
+		"spf-record":False,
+		"dkim-record":False,
+		"dmarc-record":False,
+		"spoofed":False,
+		"ip-address":"",
+		"sender-client":"",
+		"spoofed-mail":"",
+		"dt":"",
+		"content-type":"",
+		"subject":""
+	}
+	for h in headers.items():
+		#ID Messaggio
+		if h[0].lower()=="message-id":
+			infomail["message-id"]=h[1]
+		#Server da dove è stata inviata l'email
+		if h[0].lower()=="received":
+			infomail["sender-client"]=h[1]
+		#Autenticazione rilevata dal server di posta
+		if h[0].lower()=="authentication-results":
+			if(re.search("spf=pass",h[1])):
+				infomail["spf-record"]=True;
+			if(re.search("dkim=pass",h[1])):
+				infomail["dkim-record"]=True
+			if(re.search("dmarc=pass",h[1])):
+				infomail["dmarc-record"]=True
+			if(re.search("does not designate",h[1])):
+				infomail["spoofed"]=True
+			if(re.search(r"(\d{1,3}\.){3}\d{1,3}", h[1])):
+				ip=re.search(r"(\d{1,3}\.){3}\d{1,3}", h[1])
+				infomail["ip-address"]=str(ip.group())
+		if h[0].lower()=="reply-to":
+			infomail["spoofed-mail"]=h[1]
+		if h[0].lower()=="date":
+			infomail["dt"]=h[1]
+		if h[0].lower()=="content-type":
+			infomail["content-type"]=h[1]
+		if h[0].lower()=="subject":
+			infomail["subject"]=h[1]
+	print("\n=========================Risultato=========================\n")
+	print("[+] ID Messaggio: "+infomail["message-id"])
+	if(infomail["spf-record"]):
+		print("[+] " + verde + "SPF Records: PASS"+ reset)
+	else:
+		print("[+] " + rosso + "SPF Records: FAIL" + reset)
+	if(infomail["dkim-record"]):
+		print("[+] " + verde + "DKIM: PASS" + reset)
+	else:
+		print("[+] " + rosso + "DKIM: FAIL" + reset)
+	if(infomail["dmarc-record"]):
+		print("[+] " + verde + "DMARC: PASS" + reset)
+	else:
+		print("[+] " + rosso + "DMARC: FAIL" + reset)
+	if(infomail["spoofed"] and (not infomail["spf-record"]) and (not infomail["dkim-record"]) and (not infomail["dmarc-record"])):
+		print("[+] " + rosso + "L'E-mail è contraffatta" + reset)
+		print("[+] " + giallo + "E-mail: " + infomail["spoofed-mail"] + reset)
+		print("[+] " + giallo + "Indirizzo IP: " + infomail["ip-address"] + reset)
+	else:
+		print("[+] " + verde + "L'E-mail è autentica" + reset)
+		print("[+] " + giallo + "IP-Address: " + infomail["ip-address"] + reset)
+	print("[+] Provider: " + infomail["sender-client"])
+	print("[+] Tipo di contenuto: " + infomail["content-type"])
+	print("[+] Data e Ora: " + infomail["dt"])
+	print("[+] Oggetto: " + infomail["subject"]+"\n\n")
 while True: #Ricomincia il programma
  menu()
  control()
