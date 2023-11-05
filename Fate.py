@@ -99,9 +99,8 @@ def IDFalso(): #Genera una falsa identità
     print("-----x-----x-----x-----x-----")
 def mailinfo():
 	eml = input("Inserisci il percorso del file: ")
-	f = open(eml, "r") 
-	msg = email.message_from_file(f)
-	f.close()
+	with open(eml, "r") as f:
+		msg = email.message_from_file(f)
 	headers = email.message_from_string(msg.as_string())
 	infomail={
 		"message-id":"",
