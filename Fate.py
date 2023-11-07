@@ -4,7 +4,7 @@ Dal momento che viene spesso usato per scopi di intrusione e spam, molte societ�
 default.
 """
 # Importo le librerie
-import smtplib, colorama, time, re, sys, socket, email
+import smtplib, colorama, time, re, sys, socket, email, requests
 from email_validator import validate_email
 from colorama import Fore #BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE
 from colorama import Style #DIM, NORMAL, BRIGHT, RESET_ALL
@@ -19,14 +19,16 @@ opaco = Style.DIM
 brillante = Style.BRIGHT
 giallo = Fore.YELLOW
 #Info
-with open('Info/info.txt', encoding='utf8') as f:
+with open('Moduli/info.txt', encoding='utf8') as f:
      print(blu + f.read() + reset,'\n')
 time.sleep(1) #Pausa
 #Analisi dei dati di rete
 hostname = socket.gethostname()
 ipAddress = socket.gethostbyname(hostname)
+publicIp = requests.get('https://checkip.amazonaws.com').text.strip()
 print(f"Hostname: {hostname}")
-print('Il mio indirizzo IP locale è: ', ipAddress,'\n')
+print("IP locale: ", ipAddress)
+print("IP pubblico: ", publicIp, '\n')
 time.sleep(2) #Pausa
 def verifica_sintassi(email): #Definisco una funzione che controlla la sintassi di un indirizzo email
   regex = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+[a-zA-Z0-9-.]+$" #Uso una regex per verificare che l'email abbia il formato corretto
@@ -163,7 +165,7 @@ def mailinfo():
 		print("[+] " + giallo + "Indirizzo IP: " + infomail["ip-address"] + reset)
 	else:
 		print("[+] " + verde + "L'E-mail è autentica" + reset)
-		print("[+] " + giallo + "IP-Address: " + infomail["ip-address"] + reset)
+		print("[+] " + giallo + "Indirizzo IP: " + infomail["ip-address"] + reset)
 	print("[+] Provider: " + infomail["sender-client"])
 	print("[+] Tipo di contenuto: " + infomail["content-type"])
 	print("[+] Data e Ora: " + infomail["dt"])
