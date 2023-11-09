@@ -1,4 +1,4 @@
-# Dr.-Fate 2.0.8
+# Dr.-Fate 2.1.8
 Sistema pensato per effettuare varie verifiche
 1) Verifica di una email (Se è vera)
 2) Controllo IP
