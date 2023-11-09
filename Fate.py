@@ -4,7 +4,7 @@ Dal momento che viene spesso usato per scopi di intrusione e spam, molte societ�
 default.
 """
 # Importo le librerie
-import smtplib, colorama, time, re, sys, socket, email, requests
+import smtplib, colorama, time, re, sys, socket, email, requests, webbrowser
 from email_validator import validate_email
 from colorama import Fore #BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE
 from colorama import Style #DIM, NORMAL, BRIGHT, RESET_ALL
@@ -30,26 +30,8 @@ print(f"Hostname: {hostname}")
 print("IP locale: ", ipAddress)
 print("IP pubblico: ", publicIp, '\n')
 time.sleep(2) #Pausa
-def verifica_sintassi(email): #Definisco una funzione che controlla la sintassi di un indirizzo email
-  regex = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+[a-zA-Z0-9-.]+$" #Uso una regex per verificare che l'email abbia il formato corretto
-  return bool(re.match(regex, email)) #Restituisco True se l'email è valida, False altrimenti
-def verifica_dominio(email): #Definisco una funzione che controlla l'esistenza del dominio di un indirizzo email
-        try:
-         return validate_email(email)
-        except:
-         return False #Se lo stato è diverso, restituisco False
-def verifica_esistenza(email): #Definisco una funzione che controlla l'esistenza di un indirizzo email
-  nome, dominio = email.split("@") #Divido l'email in nome utente e dominio
-  smtp = smtplib.SMTP() #Creo un oggetto SMTP per connettermi al server del dominio
-  try:
-    smtp.connect("mail." + dominio) #Provo a connettermi al server e a inviare un comando HELO
-    smtp.helo()
-    codice, messaggio = smtp.vrfy(nome) #Provo a inviare un comando VRFY con il nome utente
-    smtp.quit() #Chiudo la connessione
-    return codice == 250 #Restituisco True se il codice è 250 (OK)
-  except:
-    return False #Se il codice è diverso, restituisco False
-def menu(): #Menu
+#Menu
+def menu():
     print(giallo + """
 \t 1. Verifica Indirizzo Email
 \t 2. Verifica Indirizzo IP
@@ -57,7 +39,8 @@ def menu(): #Menu
 \t 4. Estrai Dati Email
 \t 5. Exit
 """ + reset)
-def control(): #Lista azioni
+#Lista azioni
+def control(): 
     ctrl = input("Effettua La Scelta: ")
     if ctrl == "1" :
         veremail() #Controllo indirizzo email
@@ -70,35 +53,58 @@ def control(): #Lista azioni
     elif ctrl == "5" :
         sys.exit()
     else :
-        print(rosso + "Scelta Errata" + reset)    
-def veremail(): #Verifico Email
-   email = input("Inserisci l'indirizzo email da verificare: ") #Chiedo all'utente di inserire un indirizzo email da verificare
+        print(rosso + "Scelta Errata" + reset)
+#Verifico Email            
+def verifica_sintassi(email):
+  regex = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+[a-zA-Z0-9-.]+$"
+  return bool(re.match(regex, email))
+def verifica_dominio(email):
+        try:
+         return validate_email(email)
+        except:
+         return False
+def verifica_esistenza(email):
+  nome, dominio = email.split("@")
+  smtp = smtplib.SMTP()
+  try:
+    smtp.connect("mail." + dominio)
+    smtp.helo()
+    codice, messaggio = smtp.vrfy(nome)
+    smtp.quit()
+    print(messaggio)
+    return codice == 250
+  except:
+    return False
+def veremail(): 
+   email = input("Inserisci l'indirizzo email da verificare: ")
    print("Controllo in corso...")
-   if verifica_sintassi(email): #Controllo la sintassi dell'email
-    print(verde + "L'email ha una sintassi valida.")
-    if verifica_dominio(email): #Controllo il dominio dell'email
-     print(verde + 'Dominio Valido' + reset)
-     if verifica_esistenza(email): #Controllo l'esistenza dell'email
-      print(verde + "L'email esiste ed è funzionante." + reset)
+   if verifica_sintassi(email):
+    print(f"{verde}L'email ha una sintassi valida.{reset}")
+    if verifica_dominio(email):
+     print(f"{verde}'Dominio Valido'{reset}")
+     if verifica_esistenza(email):
+      print(f"{verde}L'email esiste ed è funzionante.{reset}")
      else:
-      print(rosso + "L'email non esiste o non è funzionante. " + giallo + "(PS alcuni provider disabilitano VRFY e EXPN)" + reset)
+      print(f"{rosso}L'email non esiste o non è funzionante.{giallo}  (PS alcuni provider disabilitano VRFY e EXPN){reset}")
     else:
-     print(rosso + "Dominio Inesistente" + reset)
+     print(f"{rosso}Dominio Inesistente{reset}")
    else:
-    print(rosso + "L'email ha una sintassi non valida." + reset)
-def ipinfo(): #Verifico IP
-    import webbrowser
+    print(f"{rosso}L'email ha una sintassi non valida.{reset}")
+#Verifico IP    
+def ipinfo():
     new = 2
     url = ("https://ipinfo.io/")
     term = input("Inserisci Indirizzo IP: ")
-    webbrowser.open(url+term,new=new)
-def IDFalso(): #Genera una falsa identità
-    print("\n","-----x-----x-----x-----x-----")
-    print(verde + "Email: ",fake.email())
-    print("Nome E Cognome: ",fake.name())
-    print("Indirizzo: ",fake.address())
-    print("Stato: Italia" + reset)
-    print("-----x-----x-----x-----x-----")
+    webbrowser.open(f"{url}{term}", new=new)
+#Genera una falsa identità
+def IDFalso():
+	print(f"\n-----x-----x-----x-----x-----x-----")
+	print(f"{verde}Email: {fake.email()}")
+	print(f"Nome E Cognome: {fake.name()}")
+	print(f"Indirizzo: {fake.address()}")
+	print(f"Stato: Italia{reset}")
+	print(f"-----x-----x-----x-----x-----x-----")
+#Esamina il sorgente di una email
 def mailinfo():
 	eml = input("Inserisci il percorso del file: ")
 	with open(eml, "r") as f:
