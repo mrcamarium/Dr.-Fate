@@ -2,7 +2,7 @@
 ░▒█░▒█░█▄▄▀░▄▄░░░▒█▀▀░░█▄▄█░░█░░█░░█
 ░▒█▄▄█░▀░▀▀░▀▀░░░▒█░░░░▀░░▀░░▀░░░▀▀░
 
-             Version 2.0.8
+             Version 2.1.8
           Autore: Mr. Camarium
             Canale Youtube
               mrcamarium
