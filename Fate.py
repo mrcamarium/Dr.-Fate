@@ -4,7 +4,7 @@ Dal momento che viene spesso usato per scopi di intrusione e spam, molte societ�
 default.
 """
 # Importo le librerie
-import smtplib, colorama, time, re, sys, socket, email, requests, webbrowser
+import smtplib, colorama, time, re, sys, socket, email, requests, webbrowser, os.path
 from email_validator import validate_email
 from colorama import Fore #BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE
 from colorama import Style #DIM, NORMAL, BRIGHT, RESET_ALL
@@ -107,6 +107,11 @@ def IDFalso():
 #Esamina il sorgente di una email
 def mailinfo():
 	eml = input("Inserisci il percorso del file: ")
+	if os.path.isfile(eml):
+		print("Controllo in corso...")
+	else:
+		print(f"{rosso}Il file non esiste.{reset}")
+		mailinfo()
 	with open(eml, "r") as f:
 		msg = email.message_from_file(f)
 	headers = email.message_from_string(msg.as_string())
@@ -151,31 +156,31 @@ def mailinfo():
 			infomail["content-type"]=h[1]
 		if h[0].lower()=="subject":
 			infomail["subject"]=h[1]
-	print("\n=========================Risultato=========================\n")
-	print("[+] ID Messaggio: "+infomail["message-id"])
+	print(f"\n=========================Risultato=========================\n")
+	print(f"[+] ID Messaggio: "+infomail["message-id"])
 	if(infomail["spf-record"]):
-		print("[+] " + verde + "SPF Records: PASS"+ reset)
+		print(f"[+] {verde}SPF Records: PASS{reset}")
 	else:
-		print("[+] " + rosso + "SPF Records: FAIL" + reset)
+		print(f"[+] {rosso}SPF Records: FAIL{reset}")
 	if(infomail["dkim-record"]):
-		print("[+] " + verde + "DKIM: PASS" + reset)
+		print(f"[+] {verde}DKIM: PASS{reset}")
 	else:
-		print("[+] " + rosso + "DKIM: FAIL" + reset)
+		print(f"[+] {rosso}DKIM: FAIL{reset}")
 	if(infomail["dmarc-record"]):
-		print("[+] " + verde + "DMARC: PASS" + reset)
+		print(f"[+] {verde}DMARC: PASS{reset}")
 	else:
-		print("[+] " + rosso + "DMARC: FAIL" + reset)
+		print(f"[+] {rosso}DMARC: FAIL{reset}")
 	if(infomail["spoofed"] and (not infomail["spf-record"]) and (not infomail["dkim-record"]) and (not infomail["dmarc-record"])):
-		print("[+] " + rosso + "L'E-mail è contraffatta" + reset)
-		print("[+] " + giallo + "E-mail: " + infomail["spoofed-mail"] + reset)
-		print("[+] " + giallo + "Indirizzo IP: " + infomail["ip-address"] + reset)
+		print(f"[+] {rosso}L'E-mail è contraffatta{reset}")
+		print(f"[+] {giallo}E-mail: " + infomail["spoofed-mail"] + reset)
+		print(f"[+] {giallo}Indirizzo IP: " + infomail["ip-address"] + reset)
 	else:
-		print("[+] " + verde + "L'E-mail è autentica" + reset)
-		print("[+] " + giallo + "Indirizzo IP: " + infomail["ip-address"] + reset)
-	print("[+] Provider: " + infomail["sender-client"])
-	print("[+] Tipo di contenuto: " + infomail["content-type"])
-	print("[+] Data e Ora: " + infomail["dt"])
-	print("[+] Oggetto: " + infomail["subject"]+"\n\n")
+		print(f"[+] {verde}L'E-mail è autentica{reset}")
+		print(f"[+] {giallo}Indirizzo IP: " + infomail["ip-address"] + reset)
+	print(f"[+] Provider: " + infomail["sender-client"])
+	print(f"[+] Tipo di contenuto: " + infomail["content-type"])
+	print(f"[+] Data e Ora: " + infomail["dt"])
+	print(f"[+] Oggetto: " + infomail["subject"]+"\n\n")
 while True: #Ricomincia il programma
  menu()
  control()
