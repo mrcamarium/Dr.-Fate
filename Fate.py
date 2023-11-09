@@ -19,7 +19,7 @@ opaco = Style.DIM
 brillante = Style.BRIGHT
 giallo = Fore.YELLOW
 #Info
-with open('Moduli/info.txt', encoding='utf8') as f:
+with open('Moduli/Info.txt', encoding='utf8') as f:
      print(blu + f.read() + reset,'\n')
 time.sleep(1) #Pausa
 #Analisi dei dati di rete
