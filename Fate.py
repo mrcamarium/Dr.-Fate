@@ -116,29 +116,26 @@ def mailinfo():
 		msg = email.message_from_file(f)
 	headers = email.message_from_string(msg.as_string())
 	infomail={
-		"message-id":"",
-		"spf-record":False,
-		"dkim-record":False,
-		"dmarc-record":False,
-		"spoofed":False,
-		"ip-address":"",
-		"sender-client":"",
-		"spoofed-mail":"",
-		"dt":"",
-		"content-type":"",
-		"subject":""
+    	"message-id":"",
+   		"spf-record":False,
+    	"dkim-record":False,
+    	"dmarc-record":False,
+    	"spoofed":False,
+    	"ip-address":"",
+    	"sender-client":"",
+    	"spoofed-mail":"",
+    	"dt":"",
+    	"content-type":"",
+    	"subject":""
 	}
 	for h in headers.items():
-		#ID Messaggio
 		if h[0].lower()=="message-id":
 			infomail["message-id"]=h[1]
-		#Server da dove è stata inviata l'email
 		if h[0].lower()=="received":
 			infomail["sender-client"]=h[1]
-		#Autenticazione rilevata dal server di posta
 		if h[0].lower()=="authentication-results":
 			if(re.search("spf=pass",h[1])):
-				infomail["spf-record"]=True;
+				infomail["spf-record"]=True
 			if(re.search("dkim=pass",h[1])):
 				infomail["dkim-record"]=True
 			if(re.search("dmarc=pass",h[1])):
@@ -156,31 +153,33 @@ def mailinfo():
 			infomail["content-type"]=h[1]
 		if h[0].lower()=="subject":
 			infomail["subject"]=h[1]
-	print(f"\n=========================Risultato=========================\n")
-	print(f"[+] ID Messaggio: "+infomail["message-id"])
+	result = giallo + "\n============================Risultato============================\n" + reset
+	result += "[+] ID Messaggio: {}\n".format(infomail["message-id"])
 	if(infomail["spf-record"]):
-		print(f"[+] {verde}SPF Records: PASS{reset}")
+		result += "[+] " + verde + "SPF Records: PASS\n" + reset
 	else:
-		print(f"[+] {rosso}SPF Records: FAIL{reset}")
+		result += "[+] " + rosso + "SPF Records: FAIL\n" + reset
 	if(infomail["dkim-record"]):
-		print(f"[+] {verde}DKIM: PASS{reset}")
+		result += "[+] " + verde + "DKIM: PASS\n" + reset
 	else:
-		print(f"[+] {rosso}DKIM: FAIL{reset}")
+		result += "[+] " + rosso + "DKIM: FAIL\n" + reset
 	if(infomail["dmarc-record"]):
-		print(f"[+] {verde}DMARC: PASS{reset}")
+		result += "[+] " + verde + "DMARC: PASS\n" + reset
 	else:
-		print(f"[+] {rosso}DMARC: FAIL{reset}")
+		result += "[+] DMARC: FAIL\n"
 	if(infomail["spoofed"] and (not infomail["spf-record"]) and (not infomail["dkim-record"]) and (not infomail["dmarc-record"])):
-		print(f"[+] {rosso}L'E-mail è contraffatta{reset}")
-		print(f"[+] {giallo}E-mail: " + infomail["spoofed-mail"] + reset)
-		print(f"[+] {giallo}Indirizzo IP: " + infomail["ip-address"] + reset)
+		result += "[+] " + rosso + "L'E-mail è contraffatta\n" + reset
+		result += "[+] E-mail: {}\n".format(infomail["spoofed-mail"])
+		result += "[+] " + giallo + "Indirizzo IP: {}\n".format(infomail["ip-address"] + reset)
 	else:
-		print(f"[+] {verde}L'E-mail è autentica{reset}")
-		print(f"[+] {giallo}Indirizzo IP: " + infomail["ip-address"] + reset)
-	print(f"[+] Provider: " + infomail["sender-client"])
-	print(f"[+] Tipo di contenuto: " + infomail["content-type"])
-	print(f"[+] Data e Ora: " + infomail["dt"])
-	print(f"[+] Oggetto: " + infomail["subject"]+"\n\n")
+		result += "[+] " + verde + "L'E-mail è autentica\n" + reset
+		result += "[+] " + giallo + "Indirizzo IP: {}\n".format(infomail["ip-address"] + reset)
+	result += "[+] Provider: {}\n".format(infomail["sender-client"])
+	result += "[+] Tipo di contenuto: {}\n".format(infomail["content-type"])
+	result += "[+] Data e Ora: {}\n".format(infomail["dt"])
+	result += "[+] Oggetto: {}\n\n".format(infomail["subject"])
+	print(result)
+        
 while True: #Ricomincia il programma
  menu()
  control()
