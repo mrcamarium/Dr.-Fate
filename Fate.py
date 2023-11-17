@@ -1,8 +1,3 @@
-"""
-Con il comando VRFY e EXPN è possibile la verifica di indirizzi email residenti sul server di posta.
-Dal momento che viene spesso usato per scopi di intrusione e spam, molte società lo disabilitano di
-default.
-"""
 # Importo le librerie
 import smtplib, colorama, time, re, sys, socket, email, requests, webbrowser, os.path
 from email_validator import validate_email
@@ -19,7 +14,7 @@ opaco = Style.DIM
 brillante = Style.BRIGHT
 giallo = Fore.YELLOW
 #Info
-with open('Moduli/Info.txt', encoding='utf8') as f:
+with open('Info.txt', encoding='utf8') as f:
      print(blu + f.read() + reset,'\n')
 time.sleep(1) #Pausa
 #Analisi dei dati di rete
@@ -29,7 +24,7 @@ publicIp = requests.get('https://checkip.amazonaws.com').text.strip()
 print(f"Hostname: {hostname}")
 print("IP locale: ", ipAddress)
 print("IP pubblico: ", publicIp, '\n')
-time.sleep(2) #Pausa
+time.sleep(1) #Pausa
 #Menu
 def menu():
     print(giallo + """
@@ -49,7 +44,7 @@ def control():
     elif ctrl == "3" :
         IDFalso() #Genera una falsa identità
     elif ctrl == "4" :
-        mailinfo()
+        mailinfo() #Esamina il soregnte di una email
     elif ctrl == "5" :
         sys.exit()
     else :
@@ -153,7 +148,7 @@ def mailinfo():
 			infomail["content-type"]=h[1]
 		if h[0].lower()=="subject":
 			infomail["subject"]=h[1]
-	result = giallo + "\n============================Risultato============================\n" + reset
+	result = giallo + "\n==============================Risultato==============================\n" + reset
 	result += "[+] ID Messaggio: {}\n".format(infomail["message-id"])
 	if(infomail["spf-record"]):
 		result += "[+] " + verde + "SPF Records: PASS\n" + reset
@@ -166,7 +161,7 @@ def mailinfo():
 	if(infomail["dmarc-record"]):
 		result += "[+] " + verde + "DMARC: PASS\n" + reset
 	else:
-		result += "[+] DMARC: FAIL\n"
+		result += "[+] " + rosso + "DMARC: FAIL\n" + reset
 	if(infomail["spoofed"] and (not infomail["spf-record"]) and (not infomail["dkim-record"]) and (not infomail["dmarc-record"])):
 		result += "[+] " + rosso + "L'E-mail è contraffatta\n" + reset
 		result += "[+] E-mail: {}\n".format(infomail["spoofed-mail"])
@@ -179,7 +174,7 @@ def mailinfo():
 	result += "[+] Data e Ora: {}\n".format(infomail["dt"])
 	result += "[+] Oggetto: {}\n\n".format(infomail["subject"])
 	print(result)
-        
-while True: #Ricomincia il programma
+#Ricomincia il programma        
+while True:
  menu()
  control()
