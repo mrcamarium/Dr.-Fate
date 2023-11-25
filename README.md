@@ -1,9 +1,11 @@
-# Dr.-Fate 2.1.8
+# Dr.-Fate 2.3.9
 Sistema pensato per effettuare varie verifiche
 1) Verifica di una email (Se è vera)
-2) Controllo IP
+2) Verifica Indirizzo IP
 3) Generatore di falsa identità
 4) Estrapola da un file eml i dati del mittente per effettuare delle verifiche
+5) Invia Email Anonima
+6) Genera Una Email Temporanea
 
 $ apt update && apt upgrade 
   
