@@ -19,4 +19,4 @@ $ pip install -r requirements.txt
   
 $ cd Dr.-Fate 
   
-$ python3 Fate.py
+$ python3 main.py
